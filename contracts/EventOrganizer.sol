@@ -25,10 +25,12 @@ contract EventOrganizer {
     }
 
     struct TicketCategory {
+        bool selling;
         string name;
         string description;
         uint256 price;
         uint256 maxTicketsPerAccount;
+        address[] buyers;
         uint256 ticketType;
         uint256 startDate;
         uint256 endDate;
@@ -75,6 +77,7 @@ contract EventOrganizer {
     ) public {
         Ticket storage t = EventTickets[_eventNumber];
         TicketCategory storage cat = t.categories[++t.categoriesCount];
+        cat.selling = false;
         cat.name = _name;
         cat.description = _description;
         cat.price = _price;
@@ -91,5 +94,64 @@ contract EventOrganizer {
             cat.ticketConfig["startNumber"] = config[0];
             cat.ticketConfig["endNumber"] = config[1];
         }
+    }
+
+    // TODO: test if the tx will go through if mapping is not deleted
+    function stopTicketCategory(uint256 eventNum, uint256 categoryNum)
+        external
+    {
+        EventTickets[eventNum].categories[categoryNum].selling = false;
+    }
+
+    function sellCategoryTickets(uint256 eventNum, uint256 categoryNum)
+        external
+    {
+        EventTickets[eventNum].categories[categoryNum].selling = true;
+    }
+
+    function deleteCategory(uint256 eventNum, uint256 categoryNum) external {
+        delete EventTickets[eventNum].categories[categoryNum];
+    }
+
+    function refundTicket(address buyer, uint256 price) external {
+        (bool success, ) = buyer.call{value: price}("");
+        require(success, "alabala");
+    }
+
+    function getEvent(uint256 eventNum) external view returns (Event memory) {
+        return Events[eventNum];
+    }
+
+    function getCategoryName(uint256 eventNum, uint256 categoryNum)
+        external
+        view
+        returns (string memory)
+    {
+        return EventTickets[eventNum].categories[categoryNum].name;
+    }
+
+    function getCategoryCount(uint256 eventNum)
+        external
+        view
+        returns (uint256)
+    {
+        return EventTickets[eventNum].categoriesCount;
+    }
+
+    function getSoldTickets(uint256 eventNumber, uint256 categoryNumber)
+        external
+        view
+        returns (uint256)
+    {
+        return
+            EventTickets[eventNumber].categories[categoryNumber].buyers.length;
+    }
+
+    function getCategoryBuyers(uint256 eventNumber, uint256 categoryNumber)
+        external
+        view
+        returns (address[] memory)
+    {
+        return EventTickets[eventNumber].categories[categoryNumber].buyers;
     }
 }

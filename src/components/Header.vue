@@ -5,11 +5,13 @@
   <br />
   <Browse v-if="displayPage === 'Browse'" />
   <Organize v-if="displayPage === 'Organize'" />
+  <!--<Test />-->
 </template>
 
 <script>
-import Browse from "./Browse.vue"
-import Organize from "./Organize.vue"
+import Browse from "./Browser/BrowseEvents.vue"
+import Organize from "./Organizer/Organize.vue"
+import Test from "./Organizer/test.vue";
 
 export default {
   data() {
@@ -20,7 +22,7 @@ export default {
   props: {
     accountAddress: String,
   },
-  components: {Browse, Organize}
+  components: {Browse, Organize, Test}
 }
 </script>
 

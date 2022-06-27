@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { publishEvent } from "../utils/contracts";
+import { publishEvent } from "../../utils/contracts";
 
 export default {
     data() {

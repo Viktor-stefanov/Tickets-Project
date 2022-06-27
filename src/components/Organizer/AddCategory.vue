@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { addTicketCategory } from "../utils/contracts";
+import { addTicketCategory } from "../../utils/contracts";
 
 export default {
   data() {
@@ -66,7 +66,7 @@ export default {
         endDate: document.getElementById("endDate")?.value,
         ticketConfig: this.ticketType === 'Fungible' ? 
                                       [document.getElementById("ticketAmount").value] :
-                                      [document.getElementById("startNum").value, document.getElementById("endNum")],
+                                      [document.getElementById("startNum").value, document.getElementById("endNum").value],
         ticketDiscounts: [document.getElementById("2-1").checked,
                           document.getElementById("3-2").checked,
                           document.getElementById("4-3").checked],
@@ -74,6 +74,7 @@ export default {
       if (Object.values(categoryData).some((el) => {return el === ""}) || categoryData.ticketConfig[0] === "") {
         return null;
       } else {
+        categoryData.ticketType = this.ticketType === 'Fungible' ? 0 : 1;
         categoryData.startDate = new Date(categoryData.startDate).getTime();
         categoryData.endDate = new Date(categoryData.endDate).getTime();
         categoryData.ticketConfig = categoryData.ticketConfig.map((el) => {return parseInt(el)});
